@@ -15,7 +15,7 @@ const page = () => {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate,
         amet expedita provident corrupti perferendis ea?
       </p>
-      <Link href="/editor">
+      <Link href="/room">
         <Button className="mt-2 text-lg font-normal py-8 px-10 rounded-full cursor-pointer">
           Use Now
         </Button>

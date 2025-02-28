@@ -89,7 +89,7 @@ int main() {
           onLanguageChange(selectedLanguage);
         }}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] cursor-pointer">
           <SelectValue placeholder={language} />
         </SelectTrigger>
         <SelectContent>

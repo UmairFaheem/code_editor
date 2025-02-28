@@ -18,7 +18,7 @@ const ThemeSelector = ({ theme, onThemeChange }) => {
     <div className="mb-4 flex items-center">
       <label className="mr-2">Theme:</label>
       <Select value={theme} onValueChange={onThemeChange}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] cursor-pointer">
           <SelectValue placeholder="Theme" />
         </SelectTrigger>
         <SelectContent>

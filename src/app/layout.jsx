@@ -1,6 +1,6 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Live Code Collaborator",
@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className="min-h-screen flex flex-col">
-          <Header/>
+          <Header />
           {children}
         </body>
       </html>
