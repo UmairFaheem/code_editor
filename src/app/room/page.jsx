@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { io } from "socket.io-client";
 import {
   Dialog,
   DialogContent,
@@ -14,21 +15,39 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter, redirect } from "next/navigation";
 
+const socket = io("http://localhost:5000");
+
 const Room = () => {
   const router = useRouter();
   const { isLoaded, userId } = useAuth();
 
-  console.log("from '/room'");
-  console.log("userId:", userId);
-  console.log("isLoaded:", isLoaded);
+  const [roomId, setRoomId] = useState("");
+  const [passcode, setPasscode] = useState("");
+
+  useEffect(() => {
+    socket.on("user-joined", (userId) => {
+      console.log(`${userId} joined the room`);
+    });
+
+    return () => {
+      socket.off("user-joined");
+    };
+  }, []);
+
   function handleCreateRoom() {
-    console.log("Creating....");
-    router.push("/editor/as541a46asd5");
+    const newRoomId = Math.random().toString(36).substr(2, 6);
+    console.log("Creating Room....");
+    socket.emit("create-room", newRoomId);
+    router.push(`/editor/${newRoomId}`);
+    // router.push("/editor/as541a46asd5");
   }
 
   function handleJoinRoom() {
     console.log("Joining....");
-    router.push("/editor/as541a46asd5");
+    if (!roomId) return alert("Enter Room ID!");
+    socket.emit("join-room", roomId);
+    router.push(`/editor/${roomId}`);
+    // router.push("/editor/as541a46asd5");
   }
 
   if (isLoaded && !userId) {
@@ -49,10 +68,10 @@ const Room = () => {
             <div className="flex flex-col gap-4 py-4">
               <label htmlFor="name">Enter Room Name</label>
               <Input id="name" type="text" placeholder="e.g. Umair's Room" />
-              <label htmlFor="passcode" className="mt-2">
+              {/* <label htmlFor="passcode" className="mt-2">
                 Enter Room Passcode
               </label>
-              <Input id="passcode" type="password" placeholder="*******" />
+              <Input id="passcode" type="password" placeholder="*******" /> */}
               <Button
                 className="mt-2 cursor-pointer w-full"
                 onClick={handleCreateRoom}
@@ -73,11 +92,19 @@ const Room = () => {
             </DialogHeader>
             <div className="flex flex-col gap-4 py-4">
               <label htmlFor="name">Paste Room ID</label>
-              <Input id="name" type="text" placeholder="e.g. AC2254asd57" />
-              <label htmlFor="passcode" className="mt-2">
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter Room Id"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+
+              />
+              {/* <label htmlFor="passcode" className="mt-2">
                 Type Room Passcode
-              </label>
-              <Input id="passcode" type="password" placeholder="*******" />
+              </label> */}
+
+              {/* <Input id="passcode" type="password" placeholder="*******" /> */}
               <Button
                 className="mt-2 cursor-pointer w-full"
                 onClick={handleJoinRoom}
